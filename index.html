@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>إدارة عمارة - الاشتراكات والمصاريف</title>
+<style>
+  :root{
+    --bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--primary:#1d4ed8;--primary2:#2563eb;
+    --success:#059669;--danger:#dc2626;--warning:#d97706;--border:#e5e7eb;--shadow:0 10px 28px rgba(15,23,42,.08);
+  }
+  *{box-sizing:border-box} body{margin:0;font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  button,input,select,textarea{font:inherit} button{cursor:pointer;border:0}
+  .app{min-height:100vh}.topbar{position:sticky;top:0;z-index:20;background:#0f1f3d;color:white;padding:14px 22px;box-shadow:0 6px 20px rgba(0,0,0,.12)}
+  .topbar-inner{max-width:1400px;margin:auto;display:flex;gap:18px;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:12px}.brand-icon{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#3b82f6,#14b8a6);display:grid;place-items:center;font-size:22px;font-weight:700}.brand h1{margin:0;font-size:20px}.brand p{margin:2px 0 0;color:#cbd5e1;font-size:12px}
+  .top-actions{display:flex;gap:8px;flex-wrap:wrap}.btn{padding:9px 13px;border-radius:10px;font-weight:600;border:1px solid transparent}.btn-light{background:#fff;color:#0f1f3d}.btn-outline{background:transparent;border-color:#52627f;color:#fff}.btn-primary{background:var(--primary2);color:#fff}.btn-success{background:var(--success);color:#fff}.btn-danger{background:var(--danger);color:#fff}.btn-ghost{background:#eff6ff;color:#1e40af}
+  .layout{max-width:1400px;margin:20px auto;padding:0 18px;display:grid;grid-template-columns:250px 1fr;gap:20px}.sidebar{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:12px;height:max-content;position:sticky;top:80px}.nav-btn{width:100%;text-align:right;background:transparent;padding:12px;border-radius:10px;color:#334155;margin-bottom:4px;font-weight:600}.nav-btn.active,.nav-btn:hover{background:#eff6ff;color:#1d4ed8}.main{min-width:0}.page{display:none}.page.active{display:block}.section-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px}.section-head h2{margin:0;font-size:24px}.section-head p{margin:5px 0 0;color:var(--muted);font-size:13px}.filters{display:flex;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);padding:12px;border-radius:14px;margin-bottom:16px}.filters>*{min-width:130px}
+  .grid{display:grid;gap:15px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px}.stat{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}.stat .label{color:var(--muted);font-size:12px}.stat .value{font-size:25px;font-weight:800;margin-top:7px}.stat .sub{font-size:11px;color:var(--muted);margin-top:4px}.green{color:var(--success)}.red{color:var(--danger)}.blue{color:#1d4ed8}.orange{color:var(--warning)}
+  .cards2{grid-template-columns:1.1fr .9fr}.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}.card h3{margin:0 0 12px;font-size:16px}.card-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:650px}.table th,.table td{padding:11px 10px;border-bottom:1px solid #eef2f7;text-align:right;vertical-align:middle}.table th{font-size:12px;color:#64748b;background:#f8fafc}.table td{font-size:13px}.table tr:last-child td{border-bottom:0}.tag{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}.tag-paid{background:#ecfdf5;color:#047857}.tag-partial{background:#fffbeb;color:#b45309}.tag-unpaid{background:#fef2f2;color:#b91c1c}.tag-neutral{background:#f1f5f9;color:#475569}
+  .modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:100;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.modal-box{width:min(720px,100%);background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:18px;max-height:92vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.modal-head h3{margin:0}.close{background:#f1f5f9;border-radius:9px;padding:7px 11px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field label{display:block;font-size:12px;color:#475569;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid #dbe3ee;border-radius:10px;outline:none;background:#fff}.field input:focus,.field select:focus,.field textarea:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(37,99,235,.1)}.field.full{grid-column:1/-1}.modal-actions{display:flex;justify-content:flex-start;gap:8px;margin-top:16px}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap}.mini{font-size:12px;color:var(--muted)}.empty{padding:35px;text-align:center;color:#94a3b8}.progress{height:9px;background:#e2e8f0;border-radius:20px;overflow:hidden}.progress>span{height:100%;display:block;background:linear-gradient(90deg,#2563eb,#14b8a6)}
+  .report-box{display:flex;flex-wrap:wrap;gap:14px}.report-box .metric{flex:1 1 180px;background:#f8fafc;border-radius:12px;padding:13px}.metric b{display:block;font-size:18px;margin-top:4px}
+  .notice{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;padding:11px;border-radius:12px;font-size:12px;margin-bottom:14px}.danger-note{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+  .toast{position:fixed;bottom:18px;left:18px;z-index:200;background:#111827;color:#fff;padding:11px 14px;border-radius:10px;display:none;box-shadow:var(--shadow);font-size:13px}.toast.show{display:block}
+  .cloud-status{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#f8fafc;border:1px solid var(--border);border-radius:10px;font-size:12px;color:#475569}.cloud-dot{width:9px;height:9px;border-radius:50%;background:#94a3b8}.cloud-dot.ok{background:#10b981}.cloud-dot.warn{background:#f59e0b}.cloud-dot.bad{background:#ef4444}.code-box{direction:ltr;text-align:left;background:#0b1220;color:#dbeafe;border-radius:12px;padding:12px;overflow:auto;font:12px/1.6 Consolas,monospace;white-space:pre-wrap}.cloud-actions{display:flex;gap:8px;flex-wrap:wrap}
+  @media(max-width:1000px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:4px}.nav-btn{white-space:nowrap;width:auto;margin:0}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cards2{grid-template-columns:1fr}}
+  @media(max-width:620px){.topbar{padding:11px}.topbar-inner{align-items:flex-start}.top-actions .btn{padding:8px 9px}.brand h1{font-size:17px}.stats{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.section-head{flex-direction:column}.layout{padding:0 10px;margin-top:12px}.stat .value{font-size:20px}}
+  @page{size:A4 portrait;margin:12mm}
+  .check-row{display:flex!important;align-items:center;gap:8px!important;cursor:pointer}.check-row input{width:auto!important}
+  .print-header,.print-footer{display:none}
+  @media print{
+    .topbar,.sidebar,.top-actions,.filters,.toolbar,.no-print,.btn,.modal,.toast{display:none!important}.layout{display:block;margin:0;padding:0;max-width:none}.page{display:none!important}.page.active{display:block!important}.card,.stat{box-shadow:none;border:1px solid #b8c0cc}.print-only,.print-header,.print-footer{display:block!important}.table{min-width:0;width:100%}.table th,.table td{font-size:9.5px;padding:6px 5px;word-break:break-word}.section-head{margin-bottom:10px}.section-head h2{font-size:19px}.stats{grid-template-columns:repeat(4,1fr);gap:8px}.stat{padding:10px}.stat .value{font-size:18px}.report-box{gap:8px}.report-box .metric{padding:8px;min-width:0}.metric b{font-size:15px}.card{page-break-inside:avoid;margin-bottom:8px}.print-footer{text-align:center;margin-top:10px;padding-top:6px;border-top:1px solid #ccc;font-size:9px;color:#555}
+    body{background:#fff!important;color:#111!important}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-icon">🏢</div><div><h1>إدارة العمارة</h1><p>متابعة الاشتراكات والمصاريف والحسابات</p><div id="appDateTime" style="margin-top:3px;color:#dbeafe;font-size:11px"></div></div></div>
+      <div class="top-actions">
+        <button id="btnAddResident" type="button" class="btn btn-outline">+ ساكن</button>
+        <button id="btnAddPayment" type="button" class="btn btn-success">+ دفعة</button>
+        <button class="btn btn-primary" onclick="openExpenseModal()">+ مصروف</button>
+        <button class="btn btn-light" onclick="window.print()">🖨 طباعة</button>
+      </div>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <button class="nav-btn active" data-page="dashboard">📊 لوحة التحكم</button>
+      <button class="nav-btn" data-page="residents">👥 السكان والشقق</button>
+      <button class="nav-btn" data-page="payments">💳 الاشتراكات والدفعات</button>
+      <button class="nav-btn" data-page="expenses">🧾 المصاريف</button>
+      <button class="nav-btn" data-page="reports">📈 التقارير</button>
+      <button class="nav-btn" data-page="settings">⚙️ الإعدادات والنسخ الاحتياطي</button>
+    </aside>
+    <main class="main">
+      <div id="printHeader" class="print-header"></div>
+      <!-- Dashboard -->
+      <section class="page active" id="page-dashboard">
+        <div class="section-head"><div><h2>لوحة التحكم</h2><p>ملخص الوضع المالي للعمارة حسب الفترة المحددة.</p></div><div class="cloud-status no-print"><span id="dashboardSyncDot" class="cloud-dot"></span><span id="dashboardSyncText">حفظ محلي</span></div></div>
+        <div class="filters">
+          <select id="dashMonth" onchange="renderDashboard()"></select>
+          <select id="dashYear" onchange="renderDashboard()"></select>
+          <select id="dashStatus" onchange="renderDashboard()"><option value="all">كل حالات الاشتراك</option><option value="paid">مدفوع</option><option value="partial">جزئي</option><option value="unpaid">غير مدفوع</option></select>
+        </div>
+        <div class="grid stats">
+          <div class="stat"><div class="label">المتوقع تحصيله</div><div class="value blue" id="stExpected">0 دج</div><div class="sub">الاشتراكات الشهرية</div></div>
+          <div class="stat"><div class="label">المحصّل</div><div class="value green" id="stCollected">0 دج</div><div class="sub">الدفعات المسجّلة</div></div>
+          <div class="stat"><div class="label">المصاريف</div><div class="value orange" id="stExpenses">0 دج</div><div class="sub">مصروفات الفترة</div></div>
+          <div class="stat"><div class="label">الرصيد</div><div class="value" id="stBalance">0 دج</div><div class="sub">المحصّل ناقص المصاريف</div></div>
+        </div>
+        <div class="grid cards2">
+          <div class="card"><div class="card-top"><h3>متابعة الاشتراكات</h3><span class="mini" id="collectionRate">0%</span></div><div class="progress" style="margin:7px 0 14px"><span id="collectionBar" style="width:0%"></span></div><div class="table-wrap"><table class="table"><thead><tr><th>الشقة</th><th>الساكن</th><th>المطلوب</th><th>المدفوع</th><th>الحالة</th></tr></thead><tbody id="dashDueTable"></tbody></table></div></div>
+          <div class="card"><div class="card-top"><h3>آخر المصاريف</h3><button class="btn btn-ghost no-print" onclick="go('expenses')">عرض الكل</button></div><div class="table-wrap"><table class="table"><thead><tr><th>التاريخ</th><th>البيان</th><th>المبلغ</th></tr></thead><tbody id="dashExpenseTable"></tbody></table></div></div>
+        </div>
+      </section>
+
+      <!-- Residents -->
+      <section class="page" id="page-residents">
+        <div class="section-head"><div><h2>السكان والشقق</h2><p>إدارة الوحدات السكنية وقيمة الاشتراك الشهري.</p></div><button id="btnAddResident2" type="button" class="btn btn-primary">+ إضافة ساكن/شقة</button></div>
+        <div class="filters"><input id="residentSearch" placeholder="بحث بالاسم أو رقم الشقة…" oninput="renderResidents()" /><select id="residentActive" onchange="renderResidents()"><option value="all">كل الوحدات</option><option value="active">نشطة</option><option value="inactive">غير نشطة</option></select></div>
+        <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>الشقة</th><th>الساكن</th><th>الهاتف</th><th>الاشتراك الشهري</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody id="residentsTable"></tbody></table></div></div>
+      </section>
+
+      <!-- Payments -->
+      <section class="page" id="page-payments">
+        <div class="section-head"><div><h2>الاشتراكات والدفعات</h2><p>تسجيل الدفعات ومتابعة المستحقات حسب الشهر والسنة.</p></div><button id="btnAddPayment2" type="button" class="btn btn-success">+ تسجيل دفعة</button></div>
+        <div class="filters"><select id="payMonth" onchange="renderPayments()"></select><select id="payYear" onchange="renderPayments()"></select><select id="payResident" onchange="renderPayments()"><option value="all">كل السكان</option></select><input id="paymentSearch" placeholder="بحث…" oninput="renderPayments()" /></div>
+        <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>التاريخ</th><th>الشهر</th><th>الشقة</th><th>الساكن</th><th>المبلغ</th><th>طريقة الدفع</th><th>ملاحظة</th><th>إجراء</th></tr></thead><tbody id="paymentsTable"></tbody></table></div></div>
+      </section>
+
+      <!-- Expenses -->
+      <section class="page" id="page-expenses">
+        <div class="section-head"><div><h2>المصاريف</h2><p>تسجيل كل مصاريف العمارة وتصنيفها وربطها بالفترة.</p></div><button class="btn btn-primary" onclick="openExpenseModal()">+ إضافة مصروف</button></div>
+        <div class="filters"><select id="expMonth" onchange="renderExpenses()"></select><select id="expYear" onchange="renderExpenses()"></select><select id="expCategory" onchange="renderExpenses()"><option value="all">كل التصنيفات</option><option>تنظيف</option><option>كهرباء</option><option>ماء</option><option>صيانة</option><option>حارس</option><option>مصعد</option><option>أخرى</option><option>راتب</option></select><input id="expenseSearch" placeholder="بحث في المصاريف…" oninput="renderExpenses()" /></div>
+        <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>التاريخ</th><th>التصنيف</th><th>البيان</th><th>المبلغ</th><th>طريقة الدفع</th><th>ملاحظة</th><th>إجراء</th></tr></thead><tbody id="expensesTable"></tbody></table></div></div>
+      </section>
+
+      <!-- Reports -->
+      <section class="page" id="page-reports">
+        <div class="section-head"><div><h2>التقارير</h2><p>تقرير شهري أو سنوي قابل للطباعة.</p></div><div class="toolbar"><button class="btn btn-light" onclick="window.print()">🖨 طباعة التقرير</button><button class="btn btn-ghost" onclick="exportCSV()">⬇ تصدير CSV</button></div></div>
+        <div class="filters"><select id="reportMode" onchange="renderReports()"><option value="monthly">شهري</option><option value="yearly">سنوي</option></select><select id="reportMonth" onchange="renderReports()"></select><select id="reportYear" onchange="renderReports()"></select></div>
+        <div class="card" id="reportContent"></div>
+      </section>
+
+      <!-- Settings -->
+      <section class="page" id="page-settings">
+        <div class="section-head"><div><h2>الإعدادات والنسخ الاحتياطي</h2><p>إدارة بيانات العمارة، التخزين المحلي، والمزامنة مع Google Sheets مع الاحتفاظ بنسخة محلية عند انقطاع الإنترنت.</p></div></div>
+        <div class="notice" id="storageNotice">جاري تهيئة قاعدة البيانات المحلية…</div>
+        <div class="card" style="margin-bottom:15px"><div class="card-top"><div><h3 style="margin-bottom:5px">قاعدة البيانات المحلية</h3><div class="mini">تعمل كنسخة محلية مؤقتة، بينما تكون Google Sheets هي قاعدة البيانات السحابية عند الاتصال. تتم المزامنة تلقائيًا عند تفعيلها.</div></div><div class="cloud-status"><span id="localDbDot" class="cloud-dot"></span><span id="localDbStatus">جاري التهيئة…</span></div></div><div id="dbStats" class="report-box" style="margin-top:12px"></div><div class="toolbar" style="margin-top:12px"><button class="btn btn-primary" onclick="saveDatabaseNow()">💾 حفظ الآن</button><button class="btn btn-ghost" onclick="reloadDatabaseNow()">↻ إعادة تحميل من قاعدة البيانات</button></div></div>
+        <div class="grid cards2">
+          <div class="card"><h3>بيانات العمارة وإعدادات التاريخ</h3><div class="form-grid"><div class="field"><label>اسم العمارة</label><input id="buildingName" /></div><div class="field"><label>العنوان</label><input id="buildingAddress" /></div><div class="field"><label>المسؤول</label><input id="managerName" /></div><div class="field"><label>هاتف المسؤول</label><input id="managerPhone" /></div><div class="field"><label>قيمة الاشتراك الافتراضية (دج)</label><input id="defaultFee" type="number" min="0" step="100" /></div><div class="field"><label>تاريخ العمل الافتراضي</label><input id="appDate" type="date" /></div><div class="field"><label>وقت العمل الافتراضي</label><input id="appTime" type="time" /></div><div class="field"><label>السنة الافتراضية</label><input id="defaultYear" type="number" min="1900" max="2200" step="1" /></div><div class="field"><label>أول سنة متاحة</label><input id="yearStart" type="number" min="1900" max="2200" step="1" /></div><div class="field"><label>آخر سنة متاحة</label><input id="yearEnd" type="number" min="1900" max="2200" step="1" /></div><div class="field full"><div class="notice" style="margin:0">يمكنك إدخال أي تاريخ ووقت وأي سنوات تريدها. ستُستخدم السنة الافتراضية والتاريخ الافتراضي تلقائيًا عند فتح النماذج، بينما تظهر جميع السنوات ضمن النطاق المحدد في القوائم.</div></div></div><div class="modal-actions"><button class="btn btn-primary" onclick="saveSettings()">حفظ الإعدادات</button><button class="btn btn-ghost" onclick="useSystemDateTime()">استخدام تاريخ ووقت الجهاز</button></div></div>
+          <div class="card"><h3>قاعدة البيانات السحابية — Google Sheets</h3>
+            <div class="cloud-status" style="margin-bottom:12px"><span id="cloudDot" class="cloud-dot"></span><span id="cloudStatusText">غير متصل</span></div>
+            <div class="form-grid">
+              <div class="field full"><label>معرّف ملف Google Sheets</label><input id="googleSheetId" placeholder="مثال: 1AbCdEfGhIjKlMnOpQrStUvWxYz" autocomplete="off" /></div>
+              <div class="field full"><label class="check-row"><input id="googleAutoSync" type="checkbox" checked /> مزامنة تلقائية عند كل إضافة أو تعديل أو حذف</label></div>
+            </div>
+            <div class="cloud-actions" style="margin-top:12px">
+              <button class="btn btn-primary" onclick="saveGoogleSheetConfig()">💾 حفظ إعدادات Google Sheets</button>
+              <button class="btn btn-success" onclick="connectGoogleSheet()">☁️ اتصال وجلب البيانات</button>
+              <button class="btn btn-ghost" onclick="googleSheetPushNow()">⬆ رفع البيانات</button>
+              <button class="btn btn-light" onclick="googleSheetPullNow()">⬇ جلب البيانات</button>
+              <button class="btn btn-danger" onclick="disconnectGoogleSheet()">قطع الاتصال</button>
+            </div>
+            <p class="mini" style="margin:10px 0 0">عند تشغيل الموقع من Google Apps Script، تتم القراءة والكتابة في ملف Google Sheets المحدد. سيقوم النظام بإنشاء أوراق Settings وResidents وPayments وExpenses تلقائيًا.</p>
+            <div class="notice" style="margin:10px 0 0">المتطلبات: أنشئ مشروع Google Apps Script، أضف ملف Code.gs وملف HTML باسم index، ثم انشره كـ Web App. بعد ذلك أدخل معرّف Google Sheets هنا.</div>
+          </div>
+          <div class="card"><h3>نسخ احتياطي</h3><p class="mini">يُفضّل إنشاء نسخة قبل الاستيراد أو حذف البيانات.</p><div class="toolbar" style="margin:12px 0"><button class="btn btn-success" onclick="backupData()">⬇ تنزيل النسخة الاحتياطية</button><label class="btn btn-light" style="display:inline-flex;align-items:center;gap:6px">⬆ استيراد نسخة<input type="file" id="restoreInput" accept="application/json" style="display:none" onchange="restoreData(event)" /></label><button class="btn btn-danger" onclick="resetAll()">حذف جميع البيانات</button></div><div id="backupInfo" class="mini"></div></div>
+        </div>
+      </section>
+      <div id="printFooter" class="print-footer"></div>
+    </main>
+  </div>
+</div>
+
+<!-- Resident Modal -->
+<div class="modal" id="residentModal"><div class="modal-box"><div class="modal-head"><h3 id="residentModalTitle">إضافة ساكن/شقة</h3><button class="close" onclick="closeModal('residentModal')">✕</button></div><form onsubmit="saveResident(event)"><input type="hidden" id="residentId"/><div class="form-grid"><div class="field"><label>رقم الشقة *</label><input id="rApartment" required /></div><div class="field"><label>اسم الساكن *</label><input id="rName" required /></div><div class="field"><label>الهاتف</label><input id="rPhone" /></div><div class="field"><label>الاشتراك الشهري (دج)</label><input id="rFee" type="number" min="0" step="100" required /></div><div class="field"><label>عدد الأشخاص</label><input id="rPersons" type="number" min="0" value="1" /></div><div class="field"><label>الحالة</label><select id="rActive"><option value="true">نشطة</option><option value="false">غير نشطة</option></select></div><div class="field full"><label>ملاحظة</label><textarea id="rNote" rows="3"></textarea></div></div><div class="modal-actions"><button type="button" class="btn btn-light" onclick="closeModal('residentModal')">إلغاء</button><button class="btn btn-primary">حفظ</button></div></form></div></div>
+
+<!-- Payment Modal -->
+<div class="modal" id="paymentModal"><div class="modal-box"><div class="modal-head"><h3 id="paymentModalTitle">تسجيل دفعة</h3><button class="close" onclick="closeModal('paymentModal')">✕</button></div><form onsubmit="savePayment(event)"><input type="hidden" id="paymentId"/><div class="form-grid"><div class="field"><label>الساكن / الشقة *</label><select id="pResident" required></select></div><div class="field"><label>الشهر *</label><select id="pMonth" required></select></div><div class="field"><label>السنة *</label><select id="pYear" required></select></div><div class="field"><label>المبلغ (دج) *</label><input id="pAmount" type="number" min="0" step="50" required /></div><div class="field"><label>تاريخ الدفع *</label><input id="pDate" type="date" required /></div><div class="field"><label>طريقة الدفع</label><select id="pMethod"><option>نقدًا</option><option>تحويل بريدي</option><option>تحويل بنكي</option><option>أخرى</option></select></div><div class="field full"><label>ملاحظة</label><textarea id="pNote" rows="3"></textarea></div></div><div class="modal-actions"><button type="button" class="btn btn-light" onclick="closeModal('paymentModal')">إلغاء</button><button class="btn btn-success">حفظ الدفعة</button></div></form></div></div>
+
+<!-- Expense Modal -->
+<div class="modal" id="expenseModal"><div class="modal-box"><div class="modal-head"><h3 id="expenseModalTitle">إضافة مصروف</h3><button class="close" onclick="closeModal('expenseModal')">✕</button></div><form onsubmit="saveExpense(event)"><input type="hidden" id="expenseId"/><div class="form-grid"><div class="field"><label>التاريخ *</label><input id="eDate" type="date" required /></div><div class="field"><label>التصنيف *</label><select id="eCategory" required><option>تنظيف</option><option>كهرباء</option><option>ماء</option><option>صيانة</option><option>حارس</option><option>مصعد</option><option>راتب</option><option>أخرى</option></select></div><div class="field"><label>البيان *</label><input id="eDesc" required /></div><div class="field"><label>المبلغ (دج) *</label><input id="eAmount" type="number" min="0" step="50" required /></div><div class="field"><label>طريقة الدفع</label><select id="eMethod"><option>نقدًا</option><option>تحويل بريدي</option><option>تحويل بنكي</option><option>أخرى</option></select></div><div class="field"><label>رقم الوصل/المرجع</label><input id="eRef" /></div><div class="field full"><label>ملاحظة</label><textarea id="eNote" rows="3"></textarea></div></div><div class="modal-actions"><button type="button" class="btn btn-light" onclick="closeModal('expenseModal')">إلغاء</button><button class="btn btn-primary">حفظ المصروف</button></div></form></div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='building_manager_v1';
+const months=['جانفي','فيفري','مارس','أفريل','ماي','جوان','جويلية','أوت','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const now=new Date();
+const def={
+ settings:{buildingName:'عمارة السعادة',buildingAddress:'',managerName:'',managerPhone:'',defaultFee:1500,appDate:isoToday(),appTime:timeNow(),defaultYear:now.getFullYear(),yearStart:2024,yearEnd:2035,googleSheets:{sheetId:'',autoSync:true}},
+ residents:[
+  {id:'r1',apartment:'01',name:'أحمد بن علي',phone:'0550000000',fee:1500,persons:4,active:true,note:''},
+  {id:'r2',apartment:'02',name:'سعاد مراد',phone:'0660000000',fee:1500,persons:3,active:true,note:''},
+  {id:'r3',apartment:'03',name:'محمد قاسمي',phone:'0770000000',fee:1500,persons:2,active:true,note:''}
+ ],
+ payments:[
+  {id:'p1',residentId:'r1',month:now.getMonth(),year:now.getFullYear(),amount:1500,date:isoToday(-2),method:'نقدًا',note:''},
+  {id:'p2',residentId:'r2',month:now.getMonth(),year:now.getFullYear(),amount:1000,date:isoToday(-1),method:'نقدًا',note:'باقي 500 دج'}
+ ],
+ expenses:[
+  {id:'e1',date:isoToday(-3),category:'تنظيف',desc:'مواد تنظيف الدرج',amount:800,method:'نقدًا',ref:'',note:''},
+  {id:'e2',date:isoToday(-5),category:'كهرباء',desc:'فاتورة كهرباء الأجزاء المشتركة',amount:2200,method:'تحويل بريدي',ref:'FAC-001',note:''}
+ ]
+};
+let data=load();
+window.__buildingData=data; window.getData=()=>data; window.setData=(next)=>{if(next){data=next;window.__buildingData=data;}};
+window.refreshApp=()=>{populateAllFilters();renderDashboard();renderResidents();renderPayments();renderExpenses();renderReports();renderSettings();updateAppDateTime();updateLocalDbUI();};
+function isoToday(offset=0){const d=new Date();d.setDate(d.getDate()+offset);return d.toISOString().slice(0,10)}
+function timeNow(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function normalizeData(incoming){
+ try{
+  incoming=incoming||{};
+  incoming.settings={...def.settings,...(incoming.settings||{})};
+  incoming.settings.googleSheets={...def.settings.googleSheets,...(incoming.settings.googleSheets||{})};
+  incoming.residents=Array.isArray(incoming.residents)?incoming.residents:[];
+  incoming.payments=Array.isArray(incoming.payments)?incoming.payments:[];
+  incoming.expenses=Array.isArray(incoming.expenses)?incoming.expenses:[];
+  return incoming;
+ }catch(e){return structuredClone(def)}
+}
+function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return structuredClone(def);return normalizeData(JSON.parse(raw))}catch(e){return structuredClone(def)}}
+const LOCAL_DB_NAME='building_manager_database';
+const LOCAL_DB_VERSION=1;
+const LOCAL_DB_STORE='app_state';
+let localDb=null;
+let localDbReady=false;
+function openLocalDatabase(){
+ return new Promise((resolve,reject)=>{
+  if(!window.indexedDB){reject(new Error('IndexedDB غير متاح في هذا المتصفح'));return;}
+  const req=indexedDB.open(LOCAL_DB_NAME,LOCAL_DB_VERSION);
+  req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(LOCAL_DB_STORE))db.createObjectStore(LOCAL_DB_STORE);};
+  req.onsuccess=()=>{localDb=req.result;localDbReady=true;resolve(db=localDb);};
+  req.onerror=()=>reject(req.error||new Error('تعذر فتح قاعدة البيانات'));
+ });
+}
+async function dbGet(){if(!localDbReady)await openLocalDatabase();return new Promise((resolve,reject)=>{const tx=localDb.transaction(LOCAL_DB_STORE,'readonly');const req=tx.objectStore(LOCAL_DB_STORE).get('state');req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error);});}
+async function dbPut(payload){if(!localDbReady)await openLocalDatabase();return new Promise((resolve,reject)=>{const tx=localDb.transaction(LOCAL_DB_STORE,'readwrite');tx.objectStore(LOCAL_DB_STORE).put(payload,'state');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error('تعذر حفظ قاعدة البيانات'));});}
+async function initializeLocalDatabase(){
+ try{
+  await openLocalDatabase();
+  const stored=await dbGet();
+  if(stored){data=normalizeData(stored);window.__buildingData=data;localStorage.setItem(KEY,JSON.stringify(data));}
+  else await dbPut(structuredClone(data));
+  updateLocalDbUI();
+ }catch(e){console.warn('Local DB unavailable:',e);localDbReady=false;updateLocalDbUI(e);}
+}
+function appDate(){return data.settings.appDate||isoToday()}
+function appTime(){return data.settings.appTime||timeNow()}
+function appYear(){return Number(data.settings.defaultYear||String(appDate()).slice(0,4)||now.getFullYear())}
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(data));
+ if(localDbReady)dbPut(structuredClone(data)).catch(err=>console.warn('Local DB save failed',err));
+ if(window.googleSheetSync?.push && !window.googleSheetSync.applying && data.settings.googleSheets?.autoSync && data.settings.googleSheets?.sheetId){window.googleSheetSync.push(data).catch(err=>console.warn('Google Sheets sync failed',err));}
+ updateLocalDbUI(); updateCloudUI();
+}
+function updateLocalDbUI(err){
+ const dot=document.getElementById('localDbDot'),txt=document.getElementById('localDbStatus'),stats=document.getElementById('dbStats');
+ if(dot&&txt){dot.className='cloud-dot'+(localDbReady?' ok':' bad');txt.textContent=localDbReady?'قاعدة البيانات تعمل':'الحفظ المحلي الاحتياطي فقط';}
+ if(document.getElementById('storageNotice'))document.getElementById('storageNotice').textContent=localDbReady?'البيانات محفوظة في قاعدة بيانات المتصفح تلقائيًا، ويمكن مزامنتها مع Google Sheets عند تفعيل الربط السحابي.':'تعذر تشغيل قاعدة بيانات المتصفح؛ سيستمر الحفظ المحلي الاحتياطي.';
+ if(stats){stats.innerHTML=`<div class="metric"><span>السكان والشقق</span><b>${data.residents.length}</b></div><div class="metric"><span>الدفعات</span><b>${data.payments.length}</b></div><div class="metric"><span>المصاريف</span><b>${data.expenses.length}</b></div><div class="metric"><span>آخر حفظ</span><b>${localDbReady?new Date().toLocaleString('ar-DZ'):'—'}</b></div>`;}
+}
+window.updateLocalDbUI=updateLocalDbUI;
+function money(n){return new Intl.NumberFormat('ar-DZ').format(Math.round(Number(n)||0))+' دج'}
+function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function uid(prefix){return prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function go(page){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page)); if(page==='dashboard')renderDashboard(); if(page==='residents')renderResidents(); if(page==='payments')renderPayments(); if(page==='expenses')renderExpenses(); if(page==='reports')renderReports(); if(page==='settings')renderSettings()}
+document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+
+function fillMonths(selectId, selected=now.getMonth()){
+ const s=document.getElementById(selectId); if(!s)return; s.innerHTML=months.map((m,i)=>`<option value="${i}" ${i===Number(selected)?'selected':''}>${m}</option>`).join('');
+}
+function fillYears(selectId, selected=appYear()){
+ const s=document.getElementById(selectId); if(!s)return;
+ let start=Number(data.settings.yearStart||2024), end=Number(data.settings.yearEnd||2035);
+ if(start>end){const t=start;start=end;end=t;}
+ const sel=Number(selected); if(sel<start)start=sel; if(sel>end)end=sel;
+ const years=[]; for(let y=start;y<=end;y++)years.push(y);
+ s.innerHTML=years.map(y=>`<option value="${y}" ${y===sel?'selected':''}>${y}</option>`).join('');
+}
+function populateAllFilters(){
+ ['dashMonth','payMonth','expMonth','reportMonth','pMonth'].forEach(id=>fillMonths(id));
+ ['dashYear','payYear','expYear','reportYear','pYear'].forEach(id=>fillYears(id));
+ const pr=document.getElementById('payResident'); pr.innerHTML='<option value="all">كل السكان</option>'+data.residents.map(r=>`<option value="${r.id}">${esc(r.apartment)} - ${esc(r.name)}</option>`).join('');
+ const pm=document.getElementById('pResident'); pm.innerHTML='<option value="">اختر الساكن</option>'+data.residents.filter(r=>r.active).map(r=>`<option value="${r.id}">${esc(r.apartment)} - ${esc(r.name)}</option>`).join('');
+}
+function monthDue(month,year){return data.residents.filter(r=>r.active).map(r=>{const paid=data.payments.filter(p=>p.residentId===r.id&&Number(p.month)===Number(month)&&Number(p.year)===Number(year)).reduce((a,p)=>a+Number(p.amount||0),0); const due=Number(r.fee||0); let status=paid>=due?'paid':paid>0?'partial':'unpaid'; return {...r,paid,due,status}})}
+function renderDashboard(){
+ const m=Number(document.getElementById('dashMonth').value), y=Number(document.getElementById('dashYear').value), st=document.getElementById('dashStatus').value;
+ const rows=monthDue(m,y), expected=rows.reduce((a,r)=>a+r.due,0), collected=rows.reduce((a,r)=>a+r.paid,0);
+ const expenses=data.expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y}).reduce((a,e)=>a+Number(e.amount||0),0);
+ const balance=collected-expenses, rate=expected?Math.min(100,(collected/expected)*100):0;
+ setText('stExpected',money(expected));setText('stCollected',money(collected));setText('stExpenses',money(expenses));const balEl=document.getElementById('stBalance');balEl.textContent=money(balance);balEl.className='value '+(balance>=0?'green':'red');setText('collectionRate',rate.toFixed(0)+'%');document.getElementById('collectionBar').style.width=rate+'%';
+ const filtered=st==='all'?rows:rows.filter(r=>r.status===st);
+ document.getElementById('dashDueTable').innerHTML=filtered.length?filtered.map(r=>`<tr><td>${esc(r.apartment)}</td><td>${esc(r.name)}</td><td>${money(r.due)}</td><td>${money(r.paid)}</td><td>${statusTag(r.status)}</td></tr>`).join(''):`<tr><td colspan="5" class="empty">لا توجد بيانات</td></tr>`;
+ const ex=data.expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y}).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
+ document.getElementById('dashExpenseTable').innerHTML=ex.length?ex.map(e=>`<tr><td>${e.date}</td><td>${esc(e.desc)}</td><td>${money(e.amount)}</td></tr>`).join(''):`<tr><td colspan="3" class="empty">لا توجد مصاريف في هذه الفترة</td></tr>`;
+}
+function statusTag(s){return s==='paid'?'<span class="tag tag-paid">مدفوع</span>':s==='partial'?'<span class="tag tag-partial">جزئي</span>':'<span class="tag tag-unpaid">غير مدفوع</span>'}
+function setText(id,t){document.getElementById(id).textContent=t}
+
+function renderResidents(){
+ const q=(document.getElementById('residentSearch').value||'').trim().toLowerCase(), fl=document.getElementById('residentActive').value;
+ const rows=data.residents.filter(r=>(!q||[r.apartment,r.name,r.phone].join(' ').toLowerCase().includes(q))&&(fl==='all'||(fl==='active'?r.active:!r.active)));
+ document.getElementById('residentsTable').innerHTML=rows.length?rows.map(r=>`<tr><td><b>${esc(r.apartment)}</b></td><td>${esc(r.name)}</td><td>${esc(r.phone||'-')}</td><td>${money(r.fee)}</td><td>${r.active?'<span class="tag tag-paid">نشطة</span>':'<span class="tag tag-neutral">غير نشطة</span>'}</td><td><div class="toolbar"><button class="btn btn-ghost" onclick="editResident('${r.id}')">تعديل</button><button class="btn btn-danger" onclick="deleteResident('${r.id}')">حذف</button></div></td></tr>`).join(''):`<tr><td colspan="6" class="empty">لا توجد وحدات مطابقة</td></tr>`;
+}
+function openResidentModal(id=''){
+ document.getElementById('residentId').value=id;document.getElementById('residentModalTitle').textContent=id?'تعديل بيانات الساكن':'إضافة ساكن/شقة';
+ const r=data.residents.find(x=>x.id===id); document.getElementById('rApartment').value=r?.apartment||'';document.getElementById('rName').value=r?.name||'';document.getElementById('rPhone').value=r?.phone||'';document.getElementById('rFee').value=r?.fee??data.settings.defaultFee;document.getElementById('rPersons').value=r?.persons??1;document.getElementById('rActive').value=String(r?.active??true);document.getElementById('rNote').value=r?.note||'';openModal('residentModal');
+}
+function editResident(id){openResidentModal(id)}
+function saveResident(e){e.preventDefault();const id=document.getElementById('residentId').value||uid('r');const r={id,apartment:document.getElementById('rApartment').value.trim(),name:document.getElementById('rName').value.trim(),phone:document.getElementById('rPhone').value.trim(),fee:Number(document.getElementById('rFee').value||0),persons:Number(document.getElementById('rPersons').value||0),active:document.getElementById('rActive').value==='true',note:document.getElementById('rNote').value.trim()};const i=data.residents.findIndex(x=>x.id===id);if(i>=0)data.residents[i]=r;else data.residents.push(r);save();closeModal('residentModal');populateAllFilters();renderResidents();renderDashboard();showToast('تم حفظ بيانات الساكن');}
+function deleteResident(id){const r=data.residents.find(x=>x.id===id);if(!r)return;if(!confirm(`حذف الساكن «${r.name}» والشقة ${r.apartment}؟ ستُحذف أيضًا الدفعات المرتبطة به.`))return;data.residents=data.residents.filter(x=>x.id!==id);data.payments=data.payments.filter(p=>p.residentId!==id);save();populateAllFilters();renderResidents();renderPayments();renderDashboard();showToast('تم حذف الساكن والدفعات المرتبطة')}
+
+function renderPayments(){
+ const m=Number(document.getElementById('payMonth').value),y=Number(document.getElementById('payYear').value),rid=document.getElementById('payResident').value,q=(document.getElementById('paymentSearch').value||'').toLowerCase().trim();
+ let rows=data.payments.filter(p=>Number(p.month)===m&&Number(p.year)===y&&(rid==='all'||p.residentId===rid));
+ rows=rows.filter(p=>{const r=data.residents.find(x=>x.id===p.residentId)||{};return !q||[r.name,r.apartment,p.amount,p.method,p.note].join(' ').toLowerCase().includes(q)}).sort((a,b)=>b.date.localeCompare(a.date));
+ document.getElementById('paymentsTable').innerHTML=rows.length?rows.map(p=>{const r=data.residents.find(x=>x.id===p.residentId)||{};return `<tr><td>${p.date}</td><td>${months[p.month]} ${p.year}</td><td>${esc(r.apartment||'—')}</td><td>${esc(r.name||'—')}</td><td>${money(p.amount)}</td><td>${esc(p.method||'—')}</td><td>${esc(p.note||'—')}</td><td><div class="toolbar"><button class="btn btn-ghost" onclick="editPayment('${p.id}')">تعديل</button><button class="btn btn-danger" onclick="deletePayment('${p.id}')">حذف</button></div></td></tr>`}).join(''):`<tr><td colspan="8" class="empty">لا توجد دفعات في هذه الفترة</td></tr>`;
+}
+function openPaymentModal(id=''){
+ populateAllFilters(); const p=data.payments.find(x=>x.id===id);
+ document.getElementById('paymentId').value=id||''; document.getElementById('paymentModalTitle').textContent=id?'تعديل الدفعة':'تسجيل دفعة';
+ document.getElementById('pDate').value=p?.date||appDate(); document.getElementById('pMonth').value=Number(p?.month??(Number(String(appDate()).slice(5,7))-1)); document.getElementById('pYear').value=Number(p?.year??appYear());
+ document.getElementById('pAmount').value=p?.amount??''; document.getElementById('pNote').value=p?.note||''; document.getElementById('pMethod').value=p?.method||'نقدًا'; document.getElementById('pResident').value=p?.residentId||''; openModal('paymentModal');
+}
+function editPayment(id){openPaymentModal(id)}
+function savePayment(e){
+ e.preventDefault(); const id=document.getElementById('paymentId').value||uid('p');
+ const p={id,residentId:document.getElementById('pResident').value,month:Number(document.getElementById('pMonth').value),year:Number(document.getElementById('pYear').value),amount:Number(document.getElementById('pAmount').value||0),date:document.getElementById('pDate').value,method:document.getElementById('pMethod').value,note:document.getElementById('pNote').value.trim()};
+ const i=data.payments.findIndex(x=>x.id===id); if(i>=0)data.payments[i]=p; else data.payments.push(p); save(); closeModal('paymentModal'); populateAllFilters(); renderPayments(); renderDashboard(); showToast(i>=0?'تم تعديل الدفعة':'تم تسجيل الدفعة');
+}
+function deletePayment(id){const p=data.payments.find(x=>x.id===id);if(!p)return;if(!confirm('حذف هذه الدفعة نهائيًا؟'))return;data.payments=data.payments.filter(x=>x.id!==id);save();renderPayments();renderDashboard();showToast('تم حذف الدفعة')}
+
+
+function renderExpenses(){
+ const m=Number(document.getElementById('expMonth').value),y=Number(document.getElementById('expYear').value),cat=document.getElementById('expCategory').value,q=(document.getElementById('expenseSearch').value||'').toLowerCase().trim();
+ let rows=data.expenses.filter(e=>{const d=new Date(e.date);return d.getMonth()===m&&d.getFullYear()===y&&(cat==='all'||e.category===cat)}).filter(e=>!q||[e.desc,e.category,e.method,e.ref,e.note].join(' ').toLowerCase().includes(q)).sort((a,b)=>b.date.localeCompare(a.date));
+ document.getElementById('expensesTable').innerHTML=rows.length?rows.map(e=>`<tr><td>${e.date}</td><td><span class="tag tag-neutral">${esc(e.category)}</span></td><td>${esc(e.desc)}</td><td>${money(e.amount)}</td><td>${esc(e.method||'—')}</td><td>${esc(e.note||e.ref||'—')}</td><td><div class="toolbar"><button class="btn btn-ghost" onclick="editExpense('${e.id}')">تعديل</button><button class="btn btn-danger" onclick="deleteExpense('${e.id}')">حذف</button></div></td></tr>`).join(''):`<tr><td colspan="7" class="empty">لا توجد مصاريف في هذه الفترة</td></tr>`;
+}
+function openExpenseModal(id=''){
+ const x=data.expenses.find(e=>e.id===id); document.getElementById('expenseId').value=id||''; document.getElementById('expenseModalTitle').textContent=id?'تعديل المصروف':'إضافة مصروف';
+ document.getElementById('eDate').value=x?.date||appDate(); document.getElementById('eCategory').value=x?.category||'صيانة'; document.getElementById('eDesc').value=x?.desc||''; document.getElementById('eAmount').value=x?.amount??''; document.getElementById('eMethod').value=x?.method||'نقدًا'; document.getElementById('eRef').value=x?.ref||''; document.getElementById('eNote').value=x?.note||''; openModal('expenseModal')
+}
+function editExpense(id){openExpenseModal(id)}
+function saveExpense(e){
+ e.preventDefault(); const id=document.getElementById('expenseId').value||uid('e');
+ const x={id,date:document.getElementById('eDate').value,category:document.getElementById('eCategory').value,desc:document.getElementById('eDesc').value.trim(),amount:Number(document.getElementById('eAmount').value||0),method:document.getElementById('eMethod').value,ref:document.getElementById('eRef').value.trim(),note:document.getElementById('eNote').value.trim()};
+ const i=data.expenses.findIndex(v=>v.id===id);if(i>=0)data.expenses[i]=x;else data.expenses.push(x); save(); closeModal('expenseModal'); renderExpenses(); renderDashboard(); showToast(i>=0?'تم تعديل المصروف':'تم حفظ المصروف')
+}
+function deleteExpense(id){const x=data.expenses.find(e=>e.id===id);if(!x)return;if(!confirm(`حذف المصروف «${x.desc}» نهائيًا؟`))return;data.expenses=data.expenses.filter(e=>e.id!==id);save();renderExpenses();renderDashboard();showToast('تم حذف المصروف')}
+
+function renderSettings(){
+ const f=data.settings.googleSheets||{}; document.getElementById('buildingName').value=data.settings.buildingName||'';document.getElementById('buildingAddress').value=data.settings.buildingAddress||'';document.getElementById('managerName').value=data.settings.managerName||'';document.getElementById('managerPhone').value=data.settings.managerPhone||'';document.getElementById('defaultFee').value=data.settings.defaultFee||0;document.getElementById('appDate').value=appDate();document.getElementById('appTime').value=appTime();document.getElementById('defaultYear').value=appYear();document.getElementById('yearStart').value=Number(data.settings.yearStart||2024);document.getElementById('yearEnd').value=Number(data.settings.yearEnd||2035);
+ document.getElementById('googleSheetId').value=f.sheetId||'';document.getElementById('googleAutoSync').checked=f.autoSync!==false; document.getElementById('backupInfo').textContent=`السكان: ${data.residents.length} — الدفعات: ${data.payments.length} — المصاريف: ${data.expenses.length}`; updateCloudUI();
+}
+function saveSettings(){
+ let start=Number(document.getElementById('yearStart').value||2024),end=Number(document.getElementById('yearEnd').value||2035),defYear=Number(document.getElementById('defaultYear').value||String(document.getElementById('appDate').value||isoToday()).slice(0,4));
+ if(start>end){const t=start;start=end;end=t;}if(defYear<start||defYear>end){alert('السنة الافتراضية يجب أن تكون داخل نطاق السنوات المتاحة.');return;}
+ data.settings.buildingName=document.getElementById('buildingName').value.trim()||'إدارة العمارة';data.settings.buildingAddress=document.getElementById('buildingAddress').value.trim();data.settings.managerName=document.getElementById('managerName').value.trim();data.settings.managerPhone=document.getElementById('managerPhone').value.trim();data.settings.defaultFee=Number(document.getElementById('defaultFee').value||0);data.settings.appDate=document.getElementById('appDate').value||isoToday();data.settings.appTime=document.getElementById('appTime').value||timeNow();data.settings.defaultYear=defYear;data.settings.yearStart=start;data.settings.yearEnd=end; save(); populateAllFilters(); const month=Number(String(data.settings.appDate).slice(5,7))-1;['dashMonth','payMonth','expMonth','reportMonth'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=month;});['dashYear','payYear','expYear','reportYear','pYear'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=defYear;}); renderDashboard();renderPayments();renderExpenses();renderReports();renderSettings();updateAppDateTime();showToast('تم حفظ الإعدادات')
+}
+function useSystemDateTime(){const d=new Date();data.settings.appDate=isoToday();data.settings.appTime=timeNow();data.settings.defaultYear=d.getFullYear();document.getElementById('appDate').value=data.settings.appDate;document.getElementById('appTime').value=data.settings.appTime;document.getElementById('defaultYear').value=d.getFullYear();showToast('تم إدخال تاريخ ووقت الجهاز')}
+function updateAppDateTime(){const el=document.getElementById('appDateTime');if(el)el.textContent=`تاريخ العمل: ${data.settings.appDate||isoToday()} — الوقت: ${data.settings.appTime||timeNow()}`}
+function readGoogleSheetForm(){return {sheetId:document.getElementById('googleSheetId').value.trim(),autoSync:document.getElementById('googleAutoSync').checked}}
+function saveGoogleSheetConfig(){const cfg=readGoogleSheetForm();data.settings.googleSheets=cfg;localStorage.setItem(KEY,JSON.stringify(data));if(localDbReady)dbPut(structuredClone(data)).catch(()=>{});updateCloudUI();showToast(cfg.sheetId?'تم حفظ إعدادات Google Sheets':'تم إلغاء تحديد ملف Google Sheets');return cfg.sheetId}
+async function connectGoogleSheet(){const sheetId=readGoogleSheetForm().sheetId; if(!sheetId){alert('أدخل معرّف ملف Google Sheets أولًا.');return} data.settings.googleSheets=readGoogleSheetForm(); localStorage.setItem(KEY,JSON.stringify(data)); if(!window.googleSheetSync?.connect){alert('هذه النسخة تحتاج أن تعمل داخل Google Apps Script. افتحها من رابط Web App المنشور.');return} try{await window.googleSheetSync.connect(sheetId);renderSettings();}catch(e){alert('تعذر الاتصال بـ Google Sheets: '+(e?.message||e))}}
+async function googleSheetPushNow(){try{await window.googleSheetSync?.push(data,true);showToast('تم رفع البيانات إلى Google Sheets')}catch(e){alert('فشل رفع البيانات: '+(e?.message||e))}}
+async function googleSheetPullNow(){try{await window.googleSheetSync?.pull();showToast('تم جلب البيانات من Google Sheets')}catch(e){alert('فشل جلب البيانات: '+(e?.message||e))}}
+async function disconnectGoogleSheet(){try{await window.googleSheetSync?.disconnect?.();showToast('تم قطع الاتصال — سيستمر الحفظ المحلي')}catch(e){console.warn(e)}}
+function updateCloudUI(){const dot=document.getElementById('cloudDot'),txt=document.getElementById('cloudStatusText'),notice=document.getElementById('storageNotice');const st=window.googleSheetSync?.status||'offline';if(dot&&txt){dot.className='cloud-dot'+(st==='connected'?' ok':st==='error'?' bad':st==='connecting'?' warn':'');const labels={offline:'غير متصل — الحفظ محلي',connecting:'جاري الاتصال…',connected:'متصل بـ Google Sheets — المزامنة مفعّلة',error:'خطأ في الاتصال — الحفظ المحلي مستمر'};txt.textContent=labels[st]||st;}const d=document.getElementById('dashboardSyncDot'),dt=document.getElementById('dashboardSyncText');if(d&&dt){d.className='cloud-dot'+(st==='connected'?' ok':st==='error'?' bad':st==='connecting'?' warn':'');dt.textContent=st==='connected'?'Google Sheets متصل':st==='connecting'?'جاري المزامنة…':st==='error'?'خطأ — الحفظ المحلي':'حفظ محلي';}if(notice){notice.textContent=st==='connected'?'الوضع السحابي مفعّل: البيانات تُحفظ في Google Sheets وتُزامن عند كل عملية إضافة أو تعديل أو حذف.':'الوضع الحالي: الحفظ محليًا على هذا الجهاز. أدخل معرّف Google Sheets وشغّل الموقع كـ Google Apps Script لتفعيل المزامنة.'}}
+function backupData(){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`نسخة-احتياطية-العمارة-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);showToast('تم إنشاء النسخة الاحتياطية')}
+function restoreData(ev){const file=ev.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const incoming=JSON.parse(reader.result);if(!incoming.settings||!Array.isArray(incoming.residents)||!Array.isArray(incoming.payments)||!Array.isArray(incoming.expenses))throw new Error('invalid');data=normalizeData(incoming);save();populateAllFilters();renderDashboard();renderResidents();renderPayments();renderExpenses();renderReports();renderSettings();showToast('تم استرجاع البيانات بنجاح')}catch(e){alert('ملف النسخة الاحتياطية غير صالح.')}};reader.readAsText(file);ev.target.value=''}
+function resetAll(){if(!confirm('سيتم حذف كل السكان والدفعات والمصاريف من هذا الموقع. هل أنت متأكد؟'))return;data={settings:normalizeData({settings:def.settings,residents:[],payments:[],expenses:[]}).settings,residents:[],payments:[],expenses:[]};save();populateAllFilters();renderDashboard();renderResidents();renderPayments();renderExpenses();renderReports();renderSettings();showToast('تم حذف جميع البيانات محليًا')}
+function exportCSV(){const m=Number(document.getElementById('reportMonth').value),y=Number(document.getElementById('reportYear').value),rows=data.payments.filter(p=>Number(p.month)===m&&Number(p.year)===y).map(p=>{const r=data.residents.find(x=>x.id===p.residentId)||{};return [p.date,months[p.month],p.year,r.apartment||'',r.name||'',p.amount,p.method||'',p.note||'']});const csv='التاريخ,الشهر,السنة,الشقة,الساكن,المبلغ,طريقة الدفع,ملاحظة\n'+rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`دفعات-${months[m]}-${y}.csv`;a.click();URL.revokeObjectURL(a.href);showToast('تم تصدير الدفعات إلى CSV')}
+
+async function saveDatabaseNow(){try{await dbPut(structuredClone(data));updateLocalDbUI();showToast('تم حفظ جميع المعلومات في قاعدة البيانات')}catch(e){alert('تعذر حفظ قاعدة البيانات: '+(e?.message||e))}}
+async function reloadDatabaseNow(){try{const stored=await dbGet();if(!stored){showToast('لا توجد بيانات محفوظة بعد');return}data=normalizeData(stored);window.__buildingData=data;localStorage.setItem(KEY,JSON.stringify(data));window.refreshApp();showToast('تم تحميل المعلومات من قاعدة البيانات')}catch(e){alert('تعذر تحميل قاعدة البيانات: '+(e?.message||e))}}
+window.saveDatabaseNow=saveDatabaseNow;window.reloadDatabaseNow=reloadDatabaseNow;window.persistLocalDatabase=async()=>{if(localDbReady)await dbPut(structuredClone(data));};
+function backupData(){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`نسخة-احتياطية-العمارة-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);showToast('تم إنشاء النسخة الاحتياطية')}
+function restoreData(ev){const file=ev.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const incoming=JSON.parse(reader.result);if(!incoming.settings||!Array.isArray(incoming.residents)||!Array.isArray(incoming.payments)||!Array.isArray(incoming.expenses))throw new Error('invalid');data=incoming;save();populateAllFilters();renderDashboard();renderResidents();renderPayments();renderExpenses();renderReports();renderSettings();showToast('تم استرجاع البيانات بنجاح')}catch(e){alert('ملف النسخة الاحتياطية غير صالح.')}};reader.readAsText(file);ev.target.value=''}
+function resetAll(){if(!confirm('سيتم حذف كل السكان والدفعات والمصاريف من هذا المتصفح. هل أنت متأكد؟'))return;data={settings:{...def.settings},residents:[],payments:[],expenses:[]};save();populateAllFilters();renderDashboard();renderResidents();renderPayments();renderExpenses();renderReports();renderSettings();showToast('تم حذف جميع البيانات')}
+function exportCSV(){const m=Number(document.getElementById('reportMonth').value),y=Number(document.getElementById('reportYear').value),rows=data.payments.filter(p=>Number(p.month)===m&&Number(p.year)===y).map(p=>{const r=data.residents.find(x=>x.id===p.residentId)||{};return [p.date,months[p.month],p.year,r.apartment||'',r.name||'',p.amount,p.method||'',p.note||'']});const csv='التاريخ,الشهر,السنة,الشقة,الساكن,المبلغ,طريقة الدفع,ملاحظة\n'+rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`دفعات-${months[m]}-${y}.csv`;a.click();URL.revokeObjectURL(a.href);showToast('تم تصدير الدفعات إلى CSV')}
+
+// Close modal on overlay click
+window.addEventListener('click',e=>{if(e.target.classList?.contains('modal'))e.target.classList.remove('open')});
+// Init — each render is guarded so one optional section cannot break the rest of the UI.
+function safeRun(label,fn){try{fn&&fn();}catch(err){console.error('Building Manager:',label,err);}}
+async function initApp(){
+  bindPrimaryActions();
+  await initializeLocalDatabase();
+  safeRun('populateAllFilters',populateAllFilters);
+  const initialMonth=Number(String(appDate()).slice(5,7))-1;
+  ['dashMonth','payMonth','expMonth','reportMonth'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=initialMonth;});
+  ['dashYear','payYear','expYear','reportYear','pYear'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=appYear();});
+  safeRun('renderDashboard',renderDashboard);
+  safeRun('renderResidents',renderResidents);
+  safeRun('renderPayments',renderPayments);
+  safeRun('renderExpenses',renderExpenses);
+  safeRun('renderReports',renderReports);
+  safeRun('renderSettings',renderSettings);
+  safeRun('updateAppDateTime',updateAppDateTime);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>initApp().catch(err=>console.error(err)),{once:true});else initApp().catch(err=>console.error(err));
+</script>
+<script>
+const sheetSync={status:'offline',applying:false,available:false,connected:false};
+window.googleSheetSync=sheetSync;
+function gsAvailable(){return !!(window.google&&google.script&&google.script.run)}
+function gsCall(fn,args=[]){return new Promise((resolve,reject)=>{if(!gsAvailable()){reject(new Error('Google Apps Script غير متاح. شغّل الموقع من Web App.'));return;}const runner=google.script.run.withSuccessHandler(resolve).withFailureHandler(reject);runner[fn](...args);});}
+function setSheetStatus(s){sheetSync.status=s;sheetSync.connected=s==='connected';window.updateCloudUI?.();}
+async function connect(sheetId){if(!sheetId)throw new Error('معرّف Google Sheets مطلوب');setSheetStatus('connecting');try{await gsCall('setSpreadsheetId',[sheetId]);const remote=await gsCall('getAppData',[sheetId]);if(remote){sheetSync.applying=true;window.setData?.(normalizeData(remote));localStorage.setItem(KEY,JSON.stringify(window.getData?.()||remote));await window.persistLocalDatabase?.();sheetSync.applying=false;}else{await gsCall('initializeSheets',[sheetId]);await push(window.getData?.()||{},true)}setSheetStatus('connected');window.refreshApp?.();return true}catch(e){sheetSync.applying=false;setSheetStatus('error');throw e;}}
+async function push(payload,manual=false){if(!gsAvailable()){if(manual)throw new Error('افتح الموقع من Google Apps Script Web App');return;}const sheetId=payload?.settings?.googleSheets?.sheetId||window.getData?.()?.settings?.googleSheets?.sheetId;if(!sheetId){if(manual)throw new Error('أدخل معرّف Google Sheets أولًا');return;}setSheetStatus('connecting');await gsCall('saveAppData',[payload,sheetId]);setSheetStatus('connected');}
+async function pull(){const sheetId=window.getData?.()?.settings?.googleSheets?.sheetId;if(!sheetId)throw new Error('أدخل معرّف Google Sheets أولًا');if(!gsAvailable())throw new Error('Google Apps Script غير متاح');setSheetStatus('connecting');const remote=await gsCall('getAppData',[sheetId]);if(!remote)throw new Error('لم توجد بيانات في ملف Google Sheets');sheetSync.applying=true;window.setData?.(normalizeData(remote));localStorage.setItem(KEY,JSON.stringify(remote));await window.persistLocalDatabase?.();sheetSync.applying=false;window.refreshApp?.();setSheetStatus('connected');}
+async function disconnect(){setSheetStatus('offline')}
+sheetSync.connect=connect;sheetSync.push=push;sheetSync.pull=pull;sheetSync.disconnect=disconnect;sheetSync.available=gsAvailable();
+window.addEventListener('beforeprint',()=>{const page=document.querySelector('.page.active');const title=page?.querySelector('.section-head h2')?.textContent||'إدارة العمارة';const h=document.getElementById('printHeader'),f=document.getElementById('printFooter');if(h)h.innerHTML=`<div style="text-align:center;border-bottom:2px solid #1d4ed8;padding-bottom:7px;margin-bottom:10px"><h1 style="font-size:18px;margin:0 0 3px">${esc(data.settings.buildingName||'إدارة العمارة')}</h1><div style="font-size:10px">${esc(data.settings.buildingAddress||'')} — المسؤول: ${esc(data.settings.managerName||'')} ${esc(data.settings.managerPhone||'')}</div><h2 style="font-size:14px;margin:7px 0 0">${esc(title)}</h2></div>`;if(f)f.innerHTML=`طباعة بتاريخ ${new Date().toLocaleString('ar-DZ')} — ${esc(data.settings.buildingName||'إدارة العمارة')}`;});
+setTimeout(()=>{sheetSync.available=gsAvailable();if(data.settings.googleSheets?.sheetId&&sheetSync.available){connect(data.settings.googleSheets.sheetId).catch(e=>console.warn('Google Sheets auto-connect:',e));}else{updateCloudUI();}},350);
+</script>
+</body>
+</html>
